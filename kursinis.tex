@@ -18,7 +18,6 @@
 \usepackage{subcaption}
 \usepackage{biblatex}
 
-% Titulinio aprašas
 \university{Vilniaus universitetas}
 \faculty{Matematikos ir informatikos fakultetas}
 \department{Programų sistemų studijų programa}
@@ -27,165 +26,530 @@
 \titleineng{Evaluating Self-Healing Mechanisms in Software Test Automation}
 \author{Vladimir Deriugin}
 \status{4 kurso 2 grupės studentas}
-% \secondauthor{Vardonis Pavardonis}   % Pridėti antrą autorių
-\supervisor{prof. habil. dr. Dmitrij Nikolajev}
+\supervisor{lekt. Dmitrij Nikolajev}
 \reviewer{doc. dr. Vardenis Pavardenis}
 \date{Vilnius – \the\year}
 
-\bibliography{bibliografija}
+\bibliography{export}
 
 \begin{document}
 \maketitle
 
 \tableofcontents
 
-\section{Įvadas}
+%% Modifikuotas kursinis.tex failas
 
-Pastaraisiais metais programinės įrangos kūrimo pramonė patiria reikšmingų pokyčių, kuriuos lemia sparčiai augantys reikalavimai kokybei ir produktų išleidimo greičiui. Agile ir DevOps metodologijos tapo pagrindiniais principais, užtikrinančiais kūrimo ir diegimo procesų lankstumą bei tęstinumą. Tokiomis sąlygomis testavimo automatizavimas įgauna esminę reikšmę, leidžiant kūrimo komandoms greitai aptikti ir ištaisyti klaidas, užtikrinant programinės sistemų stabilumą ir patikimumą. Tačiau dažni pokyčiai kode, sąsajoje ir infrastruktūroje, būdingi šiuolaikinėms kūrimo metodologijoms, sukelia nestabilumą testuose ir padidina jų palaikymo laiką. Dėl to aktuali tampa savaiminio atsistatymo mechanizmų įdiegimo tema programinės įrangos testavimo automatizavime.
+\sectionnonum{Įvadas}
 
-\subsection{Temos aktualumas}
+Automatizuoti testavimo scenarijai turi būti atnaujinami kaskart, kai programos kūrėjas atlieka pakeitimus programos kode, ypač kai keičiami interneto puslapio elementų atributai, tokie kaip „id“ (identifikatorius), „name“ (vardas) ar „class“ (klasė). Jei šie atributai pasikeičia, testavimo scenarijai gali nebeveikti ir sukelti klaidingų testų nesėkmių. Tokių pakeitimų derinimas yra sudėtingas procesas, reikalaujantis daug laiko ir žmogiškųjų išteklių. Šiame kontekste atsiranda savaiminio atsistatymo (angl. self-healing) mechanizmų idėja. Dirbtinis intelektas (DI) identifikuoja neatitikimus esamuose testų scenarijuose ir juos automatiškai pataiso, taip sumažindamas klaidingų nesėkmių tikimybę bei užtikrindamas sklandų testavimo procesą be žmogaus įsikišimo. Šiame darbe analizuojami populiariausi savaiminio atsistatymo įrankiai ir jų efektyvumas praktiniame taikyme
 
-Šiuolaikinės kūrimo metodologijos, tokios kaip Agile ir DevOps, reikalauja nuolatinio testavimo ir diegimo, dažnai kasdien ar kas savaitę. Tai lemia dažnus pokyčius kodų bazėje, vartotojo sąsajoje (UI), DOM struktūroje ir API, kas savo ruožtu sukelia automatizuotų testų nestabilumą. Tradiciniai testų scenarijų palaikymo metodai tampa nepakankamai efektyvūs, nes reikalauja didelių laiko ir darbo išteklių testų pritaikymui prie pokyčių. Šiuo kontekstu savaiminio atsistatymo mechanizmai, naudojantys dirbtinį intelektą (DI) ir mašininį mokymą (MM), yra perspektyvus kryptis, galinti padidinti automatizuoto testavimo atsparumą ir efektyvumą.
+\textbf{Tyrimo objektas} $-$ Savaiminio atsistatymo įrankiai, kurie siūlo skirtingus sprendimus, kaip testai gali savarankiškai aptikti ir ištaisyti klaidas, atsirandančias dėl sąsajos, DOM struktūros, API ar kitų elementų pokyčių.
 
-Perėjimas prie išmanesnių testavimo sistemų yra lemiamas DI ir MM plėtros, leidžiančių savaiminio atsistatymo sistemoms tiksliau nustatyti gedimų priežastis ir automatiškai jas ištaisyti. Tai daro testavimo procesą atsparesnį ir sumažina priklausomybę nuo rankinio įsikišimo, kas savo ruožtu minimalizuoja laiką neveiklumo ir padidina testų scenarijų stabilumą. Tokių sistemų įdiegimas prisideda ne tik prie testavimo kokybės didinimo, bet ir prie laiko bei išteklių taupymo testų palaikyme.
+\textbf{Darbo tikslas} $-$  išsiaiškinti, kaip savaiminio atsistatymo mechanizmas padeda greičiau ir patikimiau automatizuoti programų testavimą.
 
-\subsection{Tyrimo tikslas ir uždaviniai}
-
-Pagrindinis šios kursinės darbo tikslas yra analizuoti savaiminio atsistatymo mechanizmų efektyvumą programinės įrangos testavimo automatizavime, siekiant nustatyti jų įtaką veikimo laiko sumažinimui ir testų scenarijų stabilumo padidinimui. Siekiant pasiekti nustatytą tikslą, reikia išspręsti šiuos uždavinius:
-
-\begin{enumerate}
-    \item Ištirti klaidų aptikimo ir taisymo būdus testuose, atsirandančius dėl pokyčių sąsajoje, DOM struktūroje, API ir kitose testuojamoje sistemoje elementuose.
-    \item Atlikti savaiminio atsistatymo mechanizmų Testim ir Mabl platformose palyginimą, įvertinant jų tikslumą, atstatymo greitį ir klaidingų teigiamų rezultų skaičių.
-    \item Įvertinti savaiminio atsistatymo mechanizmų poveikį testų scenarijų stabilumui ir palaikymui, taip pat laikui ir ištekliams, skiriamiems testų palaikymui, sumažinimui.
-    \item Ištirti mašininio mokymosi integraciją į Testim ir Mabl savaiminio atsistatymo mechanizmus, įvertinant jų gebėjimą prisitaikyti prie naujų pokyčių ir klaidų tipų.
-    \item Parengti rekomendacijas dėl platformų su savaiminio atsistatymo mechanizmais pasirinkimo ir naudojimo, siekiant padidinti automatizuoto testavimo efektyvumą.
+\textbf{Darbo uždaviniai :} 
+ 
+\begin{enumerate} 
+    \item Ištirti klaidų aptikimo ir taisymo būdus testuose, atsirandančius dėl pokyčių sąsajoje, DOM struktūroje, API ir kituose testuojamos sistemos elementuose.
+    \item Atlikti savaiminio atsistatymo mechanizmų palyginimą pasirinktuose įrankiuose, įvertinant jų tikslumą, atstatymo greitį ir klaidingų teigiamų rezultatų skaičių.
+    \item Įvertinti šių mechanizmų poveikį testų scenarijų stabilumui ir palaikymui, taip pat laikui ir ištekliams, skiriamiems testų palaikymui, sumažinimui.
 \end{enumerate}
 
-\subsection{Tyrimo objektas ir objektas}
+\textbf{Tyrimo metodai}
 
-Tyrimo objektas yra savaiminio atsistatymo mechanizmai automatizuotose programinės įrangos testavimo sistemose. Tyrimo objektas yra konkrečios šių mechanizmų įgyvendinimai Testim ir Mabl platformose. Testim ir Mabl yra šiuolaikiniai testavimo automatizavimo įrankiai, naudojantys DI ir MM prisitaikyti prie pokyčių testuojamuose taikomuose, minimizuojant rankinio įsikišimo poreikį ir didinant testavimo proceso bendrą patikimumą.
-
-\subsection{Tyrimo metodai}
-
-Siekiant tikslų ir išspręsti uždavinius šioje darbe bus naudojami šie tyrimo metodai:
+Siekiant tikslų ir išspręsti uždavinius, šioje darbe bus naudojami šie tyrimo metodai:
 
 \begin{enumerate}
-    \item \textbf{Palyginamoji analizė}: Analizuoti Testim ir Mabl platformų funkcionalias galimybes ir savaiminio atsistatymo mechanizmus, įvertinant jų stipriąsias ir silpnąsias puses.
+    \item \textbf{Palyginamoji analizė}: Analizuoti savaiminio atstatimo įrankių platformų funkcionalias galimybes ir savaiminio atsistatymo mechanizmus, įvertinant jų stipriąsias ir silpnąsias puses.
     \item \textbf{Eksperimentiniai tyrimai}: Vykdyti kontroliuojamus eksperimentus naudojant realius testavimo scenarijus ir taikymus, atlikti pokyčius testuojamame taikyme ir stebėti platformų elgesį atkuriant testus.
     \item \textbf{Veikimo ir metrikų analizė}: Rinkti ir analizuoti kiekybinius duomenis, susijusius su savaiminio atsistatymo mechanizmų veikimu, tokius kaip testų atkūrimo laikas, taisymų tikslumas ir klaidingų teigiamų rezultatų skaičius.
 \end{enumerate}
 
-\subsection{Darbo struktūra}
-
-Kursinė darbas susideda iš aštuonių pagrindinių skyrių. Įvadas pagrindžia temos aktualumą, formuluoja tyrimo tikslus ir uždavinius, taip pat aprašo tyrimo objektą ir objektą, metodus bei darbo struktūrą. Antrame skyriuje pateikiamas literatūros apžvalga, apimanti pagrindines programinės įrangos testavimo automatizavimo sąvokas, savaiminio atsistatymo mechanizmus ir esamų sprendimų, įskaitant Testim ir Mabl, apžvalgą.
-
-Trečiasis skyrius skirtas tyrimo metodologijai, aprašančiai metodų pasirinkimą, tiriamų platformų charakteristiką ir savaiminio atsistatymo mechanizmų efektyvumo vertinimo kriterijus. Ketvirtasis skyrius apima Testim ir Mabl analizę ir palyginimą, įskaitant funkcionalias galimybes, klaidų aptikimo ir taisymo metodus bei atliktų eksperimentų rezultatus.
-
-Penkiasis skyrius aptaria gautus rezultatus, išryškindamas kiekvienos platformos privalumus ir trūkumus, taip pat jų įtaką testavimo procesams. Skyriuje „Išvados“ pateikiami pagrindiniai tyrimo rezultatai, pateikiamos rekomendacijos testavimo automatizavimo specialistams ir nagrinėjamos tolesnių tyrimų perspektyvos šioje srityje. Šeštasis skyrius apima literatūros sąrašą, o septintasis – prireikus, turi priedus su papildoma medžiaga.
-
-\subsection{Teorinė bazė}
-
-Analizuojant savaiminio atsistatymo mechanizmus programinės įrangos testavimo automatizavime, pagrindinė dėmesio dėmesio sutelkiama į šias teorines pagrindus ir koncepcijas:
-
+\textbf{Darbo struktūra}
 \begin{enumerate}
-    \item \textbf{Savaiminio atsistatymo sistemos (Self-Healing Systems)}:
-    \begin{itemize}
-        \item Savaiminio atsistatymo sistemų apibrėžimas ir veikimo principai.
-        \item Savaiminio atsistatymo komponentai: gedimų aptikimas, priežasčių diagnostika, automatinis taisymas ir adaptacija.
-    \end{itemize}
-    
-    \item \textbf{Programinės įrangos automatizuotas testavimas}:
-    \begin{itemize}
-        \item Pagrindinės testavimo automatizavimo metodologijos ir įrankiai.
-        \item Testų scenarijų palaikymo ir priežiūros problemos taikyme ir jų sprendimo metodai.
-    \end{itemize}
-    
-    \item \textbf{Mašininis mokymasis ir dirbtinis intelektas testavime}:
-    \begin{itemize}
-        \item Mašininio mokymosi algoritmų taikymas klaidų aptikimo ir taisymo tikslumo didinimui testuose.
-        \item DI naudojimas sprendimų priėmimo automatizavimui, leidžiant prisitaikyti testus prie pokyčių be žmogaus įsikišimo.
-    \end{itemize}
-    
-    \item \textbf{Nuolatinė integracija ir nuolatinis diegimas (CI/CD)}:
-    \begin{itemize}
-        \item Testavimo automatizavimo vaidmuo CI/CD srautuose.
-        \item Savaiminio atsistatymo mechanizmų integracija į CI/CD procesus, siekiant užtikrinti testavimo sistemų stabilumą ir patikimumą.
-    \end{itemize}
-    
-    \item \textbf{Metrikos ir efektyvumo vertinimas}:
-    \begin{itemize}
-        \item Pagrindiniai našumo rodikliai savaiminio atsistatymo mechanizmų efektyvumo vertinimui, tokie kaip atkūrimo laikas, taisymų tikslumas ir klaidingų teigiamų rezultatų sumažėjimas.
-        \item Savaiminio atsistatymo mechanizmų diegimo įvertinimo kaštų ir naudos analizė testavimo automatizavimo procese.
-    \end{itemize}
-    
-    \item \textbf{Automatizuoto testavimo įrankių palyginamasis analizė}:
-    \begin{itemize}
-        \item Palyginimo kriterijai: funkcionalios galimybės, adaptabilumas, našumas, integracija su kitais įrankiais.
-        \item Pavyzdžiai remiantis Testim ir Mabl: detali savaiminio atsistatymo mechanizmų analizė ir palyginimas pasirinktuose įrankiuose.
-    \end{itemize}
+    \item \textbf{Įvadas}, kuris aptaria temos aktualumą, formuluoja tyrimo tikslus ir uždavinius, taip pat aprašo tyrimo objektą, metodus ir darbo struktūrą.
+    \item \textbf{Automatinių testų kontekstas} - nagrinėja automatizuoto testavimo raidą, regresinio testavimo svarbą ir savaiminio atsistatymo mechanizmų atsiradimą.
+    \item \textbf{Savaiminis atsistatymas ir teoriniai pagrindai} - aprašomi savaiminio atsistatymo veikimo principai, jų tipai bei teoriniai pagrindai.
+    \item \textbf{Esamų sprendimų apžvalga} - analizuojami populiariausi savaiminio atsistatymo įrankiai, jų veikimo metodai, pritaikymo galimybės bei iššūkiai.
+    \item \textbf{Savaiminio atsistatymo įrankių palyginimas} - atliekama išsami skirtingų įrankių palyginamoji analizė, apimanti klaidų aptikimo ir taisymo tikslumą, atstatymo greitį ir poveikį testavimo procesui.
+    \item \textbf{Eksperimentas} - pateikiama eksperimento metodika, gauti rezultatai ir jų interpretacija.
+    \item \textbf{Rezultatai ir išvados} apibendrina tyrimo metu surinktus duomenis, išskiria pagrindines įžvalgas bei pateikia rekomendacijas testavimo specialistams, taip pat nurodo galimas tolesnių tyrimų kryptis.
 \end{enumerate}
 
-\subsection{Praktinė reikšmė}
+Šis kursinis darbas suteikia gilų supratimą apie savaiminio atsistatymo mechanizmų praktinį pritaikymą bei jų efektyvumą testavimo automatizavimo kontekste.
 
-Atliktas tyrimas turi reikšmingą praktinę reikšmę, nes rezultatai gali būti naudojami programinės įrangos kūrėjams, testuotojams, kokybės užtikrinimo inžinieriams ir kokybės vadybininkams optimizuoti automatizuoto testavimo procesus. Efektyvių savaiminio atsistatymo mechanizmų įdiegimas leidžia sumažinti laiko ir išteklių sąnaudas testų palaikyme, padidinti jų patikimumą ir stabilumą, taip pat pagreitinti klaidų aptikimo ir taisymo procesą. Tai savo ruožtu prisideda prie galutinio produkto kokybės gerinimo ir įmonės konkurencingumo programinės įrangos rinkoje padidinimo.
+\section{Literatūros atrankos metodika ir analizė}
 
-\subsection{Tyrimo ribotumai}
+Atliekant literatūros analizę šiam darbui, buvo nuspręsta taikyti struktūrizuotą ir sistemingą metodiką, siekiant efektyviai surinkti ir apdoroti aktualius šaltinius. Ši strategija leido sutelkti dėmesį į mokslinius straipsnius ir tyrimus, kurie tiesiogiai susiję su programinės įrangos automatizuotu testavimu ir savaiminio atsistatymo mechanizmais.
 
-Tyrimo metu gali kilti tam tikrų ribotumų, tokių kaip tiriamų platformų funkcionalių galimybių ribotumas, testuojamų taikymų ir scenarijų įvairovė, taip pat subjektyvumas vertinant kai kuriuos kokybinius rodiklius. Šie ribotumai gali turėti įtakos rezultatų apibendrinamumui ir reikalauja atsižvelgti į juos interpretuojant gautus duomenis.
+\subsection{Literatūros paieškos strategija}
 
-\subsection{Išvados}
+Literatūros paieškai buvo nuspręsta naudoti aiškiai apibrėžtus kriterijus, siekiant efektyviau struktūrizuoti paieškos procesą ir išvengti nereikalingos informacijos. Šis metodas leido susitelkti tik į tuos šaltinius, kurie tiesiogiai atitinka darbo temą.
 
-Taigi, tyrimas apie savaiminio atsistatymo mechanizmų efektyvumą programinės įrangos testavimo automatizavime yra aktualus ir reikalingas uždavinys šiuolaikinių sparčiai besivystančių technologijų ir kūrimo metodologijų sąlygomis. Tokių įrankių kaip Testim ir Mabl analizė leis nustatyti jų privalumus ir trūkumus, įvertinti jų indėlį į testų scenarijų stabilumo ir patikimumo didinimą, taip pat parengti rekomendacijas dėl jų efektyvaus naudojimo praktinėje veikloje. Šio tyrimo rezultatai gali prisidėti prie automatizuoto testavimo procesų optimizavimo, laiko ir išteklių sąnaudų sumažinimo, taip pat bendros kuriamos programinės įrangos kokybės padidinimo.
+Pradinėje literatūros atrankos fazėje buvo aiškiai apibrėžtos tyrimo ribos ir tikslai:
 
-\section{Literatūros apžvalga}
+\begin{itemize}
+    \item \textbf{Tematinė sritis:} programinės įrangos testavimo automatizacija ir savaiminio atsistatymo mechanizmai.
+    \item \textbf{Laiko apribojimas:} paskutinių 12 metų moksliniai leidiniai, užtikrinant šaltinių aktualumą.
+    \item \textbf{Publikacijos tipas:} recenzuoti moksliniai straipsniai, informacines technologijos straipsniai, techninės ataskaitos bei konferencijų medžiaga.
+\end{itemize}
 
-\subsection{Programinės įrangos automatizuotas testavimas}
-\subsection{Savaiminio atsistatymo mechanizmai}
-\subsection{Esamų sprendimų apžvalga}
-\subsection{Teorinės pagrindai}
+Paieška buvo vykdoma šiose duomenų bazėse:
 
-\section{Tyrimo metodologija}
+\begin{enumerate}
+    \item \textbf{IEEE Xplore –} dėl stiprios orientacijos į inžinerinius ir technologinius tyrimus.
+    \item \textbf{ACM Digital Library –} kaip viena iš pagrindinių kompiuterių mokslų tyrimų platformų.
+    \item \textbf{SpringerLink ir ScienceDirect – } plataus spektro mokslinės literatūros šaltiniai.
+    \item \textbf{Google Scholar –} papildomas įrankis, užtikrinantis plačią prieigą prie įvairių publikacijų.
+\end{enumerate}
 
-\subsection{Tyrimo metodų pasirinkimas}
-\subsection{Testim ir Mabl platformų aprašymas}
-\subsubsection{Testim}
-\subsubsection{Mabl}
-\subsection{Efektyvumo vertinimo kriterijai}
-\subsection{Tyrimo vykdymo procedūra}
+Naudoti raktažodžiai buvo parinkti taip, kad padėtų eliminuoti nereikalingus rezultatus ir užtikrintų paieškos tikslumą:
 
-\section{Testim ir Mabl analizė ir palyginimas}
+\begin{itemize}
+    \item \textit{“software testing automation”} AND \textit{"self-healing mechanisms"} – siekiant sutelkti dėmesį į automatizuotą testavimą.
+    \item \textit{“test maintenance efficiency”} AND \textit{“automated tools”} – orientuota į testavimo procesų optimizavimą.
+    \item \textit{“machine learning in software testing”} – skirtas identifikuoti mašininio mokymosi taikymus automatizacijoje.
+    \item \textit{“adaptive recovery algorithms”} – siekiant atrasti algoritmus, susijusius su savaiminiu atsistatymu.
+\end{itemize}
 
-\subsection{Funkcionalios galimybės}
-\subsubsection{Testim}
-\subsubsection{Mabl}
-\subsection{Savaiminio atsistatymo mechanizmų palyginamasis analizė}
-\subsubsection{Palyginimas tarp Testim ir Mabl požiūrių klaidų aptikimui ir taisymui}
-\subsubsection{Adaptacijos prie pokyčių taikyme analizė}
-\subsection{Eksperimentų rezultatai}
-\subsubsection{Gautų duomenų pateikimas (grafikai, lentelės)}
-\subsubsection{Palyginamosios analizės rezultatų interpretacija}
+Šis raktažodžių pasirinkimas buvo būtinas, nes vien tik “self-healing” sąvoka dažnai nurodo į medicinos ar medžiagų mokslo publikacijas, kurios nėra susijusios su šio darbo tema. Papildomi raktažodžiai užtikrino, kad paieškos rezultatai būtų tiksliniai ir tiesiogiai susiję su tyrimo klausimais.
 
-\section{Rezultatų aptarimas}
+\subsection{Atrankos kriterijai}
 
-\subsection{Duomenų interpretacija}
-\subsection{Privalumai ir trūkumai}
-\subsubsection{Testim stipriųjų ir silpnųjų pusių nustatymas atliktos analizės pagrindu}
-\subsubsection{Mabl stipriųjų ir silpnųjų pusių nustatymas atliktos analizės pagrindu}
-\subsection{Įtaka testavimo procesams}
-\subsection{Tyrimo ribotumai}
+Siekiant išlaikyti darbo mokslinį pagrįstumą, literatūros atranka buvo vykdoma laikantis aiškių ir tikslių kriterijų:
 
-\section{Išvados}
+\begin{enumerate}
+    \item \textbf{Metodologinis pagrįstumas –}  prioritetas teiktas darbams, pateikiantiems aiškius eksperimentinius duomenis, algoritmų aprašus ar teorinius modelius.
+    \item \textbf{Publikacijos kokybė –  } buvo vertinamos tik recenzuotos publikacijos.
+    \item \textbf{Cituojamumo rodikliai –} straipsniai, turintys aukštą cituojamumo indeksą, buvo laikomi patikimesniais.
+\end{enumerate}
 
-\subsection{Pagrindiniai išvados}
-\subsection{Rekomendacijos}
-\subsection{Tolesnių tyrimų perspektyvos}
+\subsection{Analizės metodika}
 
+Surinkti šaltiniai buvo sistemingai analizuojami, laikantis tokios procedūros:
 
-\subsection{Poskyris}
-Citavimo pavyzdžiai: cituojamas vienas šaltinis \cite{PvzStraipsnLt}; cituojami
-keli šaltiniai \cite{Kavitha2022, PvzStraipsnLta, PvzKonfLt, PvzKonfEn, PvzKnygLt, PvzKnygEn,
-PvzElPubLt, PvzElPubEn, PvzBakLt, PvzMagistrLt, PvzPhdEn}.
-%Todo
+\begin{enumerate}
+    \item \textbf{Santraukų analizė}  išsamiau įvertinti tik tie darbai, kurių santraukos atitiko tyrimo klausimus.
+    \item \textbf{Turinio žymėjimas –  } naudotos anotacijų kūrimo programos "Mendeley", siekiant išryškinti pagrindines sąvokas, idėjas ir algoritmus.
+    \item \textbf{Kokybinė analizė –} išskirtos pagrindinės temos: testų stabilumo gerinimas, automatizavimo įrankių veikimo palyginimas ir mašininio mokymosi taikymas savaiminiam atsistatymui.
+\end{enumerate}
+
+\section{Automatinių testų kontekstas}
+
+Automatizuotas programinės įrangos testavimas yra vienas pagrindinių kokybės užtikrinimo proceso elementų, leidžiantis efektyviai nustatyti ir pašalinti klaidas programiniuose sprendimuose. Pastaraisiais metais šis procesas tapo ypač aktualus dėl sparčiai augančio programinės įrangos sudėtingumo, trumpėjančių vystymo ciklų bei vis didėjančių vartotojų reikalavimų dėl kokybės. Automatizuotas testavimas leidžia žymiai sumažinti rankinio darbo kiekį, padidinti testavimo apimtį bei pasiekti nuoseklius rezultatus.
+
+Nepaisant reikšmingų pranašumų, automatizuoto testavimo įgyvendinimas ir palaikymas kelia daug iššūkių. Vienas didžiausių sunkumų yra susijęs su automatizuotų testų patikimumu. Testavimo aplinkoje dažnai įvyksta pokyčių, tokių kaip vartotojo sąsajos modifikacijos, infrastruktūros atnaujinimai ar netikėti klaidų scenarijai, kurie gali sukelti testų gedimus. Šie gedimai neretai yra klaidingi, nes jie nurodo ne į programinės įrangos problemas, o į pasenusius ar netinkamai sukonfigūruotus testus. Dėl to testų palaikymas tampa daug laiko reikalaujančiu ir brangiu procesu, kuris gali sumažinti automatizavimo teikiamą naudą.
+
+\subsection{Automatizuoto testavimo raida ir svarba}
+
+Automatizuoto testavimo istorija prasidėjo dar praėjusio amžiaus aštuntajame dešimtmetyje, kai buvo sukurti pirmieji įrankiai, leidžiantys automatizuoti paprasčiausius testavimo procesus. Iš pradžių šie įrankiai buvo naudojami tekstinėms vartotojo sąsajoms testuoti, tačiau augant kompiuterinės technikos pajėgumams ir programinės įrangos sudėtingumui, atsirado pažangesni metodai ir įrankiai, skirti įvairių sistemų ir platformų testavimui.
+
+Dešimtajame dešimtmetyje automatizuotas testavimas įgijo didesnį populiarumą, kai programinės įrangos vystymo procesai pradėjo remtis iteraciniais metodais, tokiais kaip Agile ir Scrum. Tai paskatino testavimo įrankių evoliuciją ir didesnę integraciją su vystymo aplinkomis. Pasirodė įrankiai, gebantys automatizuoti ne tik tekstines vartotojo sąsajas, bet ir API bei web aplikacijas.
+
+2000-aisiais metais testavimo pramonėje įvyko reikšmingas šuolis: pradėjo formuotis atvirojo kodo įrankių ekosistemos, tokios kaip Selenium, kurios leido sumažinti testavimo kaštus ir išplėsti automatizavimo galimybes. Šie įrankiai tapo pagrindine daugelio organizacijų testavimo proceso dalimi.
+
+Pastaraisiais metais automatizuotas testavimas transformavosi į sudėtingą procesą, apimantį dirbtinio intelekto ir mašininio mokymosi technologijas. Šios technologijos leidžia dar labiau sumažinti rankinio darbo poreikį, prognozuoti galimus klaidų scenarijus bei automatiškai prisitaikyti prie dinamiškų testavimo aplinkų. Testavimo įrankiai tapo proaktyviais, gebančiais analizuoti sistemos pokyčius ir pasiūlyti optimizacijas.
+
+Modernus automatizuotas testavimas remiasi trimis pagrindiniais tipais, kurie išdėstomi pagal API ir UI testavimo piramidę:
+\begin{enumerate}
+    \item \textbf{Vieneto testavimas (Unit Testing):} tai pagrindinis piramidės lygmuo, skirtas atskirų programos komponentų veikimo tikrinimui. Jis užtikrina, kad kiekviena programos dalis veiktų teisingai nepriklausomai nuo kitų.
+    \item \textbf{Integracinis testavimas (Integration Testing):} šis tarpinis piramidės lygmuo tikrina, kaip skirtingi komponentai veikia kartu. Tai ypač svarbu, kai komponentai turi dalintis duomenimis ar bendrauti tarpusavyje.
+    \item \textbf{Vartotojo sąsajos testavimas (UI Testing):} aukščiausias piramidės lygmuo, skirtas visos sistemos tikrinimui realiomis naudojimo sąlygomis, ypač per vartotojo sąsają. Šis lygmuo dažnai reikalauja daugiausiai resursų ir laiko, tačiau yra būtinas, kad būtų užtikrintas teisingas galutinio produkto veikimas.
+\end{enumerate}
+
+Šie testavimo tipai sudaro vadinamąją API ir UI testavimo piramidę:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.25]{img/Piramide.png}
+    \caption{Testavimo piramidę}
+    \label{img:piramide}
+\end{figure}
+
+\subsection{Regresinio testavimo svarba ir iššūkiai}
+
+Regresinis testavimas yra vienas svarbiausių automatizuoto testavimo tipų, užtikrinantis, kad naujai atlikti programinės įrangos pakeitimai nesugadintų esamų funkcionalumų. Šis procesas ypač reikšmingas agilių vystymo ciklų metu, kai programinės įrangos iteracijos vyksta dažnai ir greitai. Regresinis testavimas leidžia aptikti klaidas, kurios gali atsirasti dėl netikėtų sąveikų tarp naujų ir esamų kodo dalių.
+
+Šio testavimo tikslas yra patikrinti, ar atlikti pakeitimai nesukėlė šalutinių poveikių visai sistemai. Dažniausiai regresinis testavimas apima iš anksto sukurtus automatizuotus testų rinkinius, kurie apima pagrindines sistemos funkcijas. Tačiau regresinio testavimo palaikymas kelia daug problemų, nes dažni sistemos ar vartotojo sąsajos pakeitimai lemia, kad testai tampa neveiksmingi ir juos reikia atnaujinti.
+
+Testų neveiksmingumas dažnai atsiranda dėl "klaidingų teigiamų" rezultatų, kai testai praneša apie problemas, nors realiai jų nėra. Tai prailgina klaidų analizės laiką ir gali sumažinti pasitikėjimą testavimo procesais. Be to, rankinis testų atnaujinimas yra sudėtingas ir daug laiko reikalaujantis procesas, kuris užkrauna didelę naštą testavimo komandoms. Todėl vis svarbesnis tampa automatizuotas testų atnaujinimas ir savarankiškos sistemos, kurios gali prisitaikyti prie pokyčių, užtikrinant nuolatinį testavimo proceso efektyvumą.
+
+Daugelis organizacijų susiduria su situacija, kai regresinio testavimo palaikymas suvartoja didžiąją dalį testavimo komandos resursų. Rankinis testų atnaujinimas ne tik atima daug laiko, bet ir padidina klaidų riziką. Šiuo atveju svarbų vaidmenį atlieka modernūs įrankiai ir metodai, galintys automatizuoti šį procesą bei sumažinti darbo krūvį.
+
+\subsection{Savaiminio atsistatymo mechanizmų atsiradimas}
+
+Siekiant spręsti šiuos iššūkius, pastaruoju metu atsirado savaiminio atsistatymo (angl. self-healing) mechanizmai, kurie yra skirti testų patikimumui ir palaikymo efektyvumui didinti. Šie mechanizmai leidžia automatizuoti testų prisitaikymą prie aplinkos pokyčių, identifikuoti ir taisyti klaidingus gedimus bei minimizuoti žmogaus įsikišimo poreikį.
+
+Automatizuoto testavimo specialistai susiduria su poreikiu nuolat stebėti ir analizuoti testų veikimą, identifikuoti pagrindines gedimų priežastis bei užtikrinti, kad visi testai veiktų sklandžiai. Dėl šios priežasties savaiminio atsistatymo technologijos tampa svarbia priemone, padedančia sumažinti testavimo komandos darbo krūvį ir užtikrinti, kad programinė įranga būtų testuojama greitai ir patikimai.
+
+Aptarsime šių technologijų teorinius pagrindus, jų esamus sprendimus bei veiksmingumą. Tikslas yra parodyti, kaip savaiminio atsistatymo mechanizmai gali pagerinti automatizuoto testavimo procesus ir prisidėti prie efektyvesnio programinės įrangos kokybės užtikrinimo.
+
+\section{Savaiminio atsistatymo teoriniai pagrindai}
+
+Savaiminis atsistatymas (angl. self-healing) yra metodika, kurios tikslas yra užtikrinti, kad automatizuotas testavimas veiktų patikimai ir efektyviai, net kai testavimo aplinkoje įvyksta pokyčiai. Šis mechanizmas suteikia sistemoms gebėjimą automatiškai identifikuoti ir ištaisyti problemas be žmogaus įsikišimo, taip sumažinant rankinio darbo poreikį ir užtikrinant sklandų testavimo procesą.
+
+\subsection{Kaip veikia savaiminis atsistatymas}
+
+Savaiminis atsistatymas yra viena iš pažangiausių metodikų automatizuotame testavime, leidžianti sistemoms prisitaikyti prie pokyčių be žmogaus įsikišimo.Jos veikimas grindžiamas gebėjimu analizuoti, atpažinti ir koreguoti klaidas, atsirandančias dėl programinės įrangos ar aplinkos pokyčių.Toliau aprašomi etapai, kurie sudaro šios metodikos pagrindą:
+
+\subsubsection{Elemento identifikavimas (Identifying the Element):} Pirmasis ir svarbiausias žingsnis savaiminio atsistatymo procese yra elementų identifikavimas. Šis procesas yra kur kas sudėtingesnis nei tradicinio automatizuoto testavimo, kuris dažnai remiasi vienu atributu. Savaiminio atsistatymo įrankiai kaupia įvairius atributus, tokius kaip ID, pavadinimas, CSS selektorius, XPath ir tekstas, taip pat elementų santykinę padėtį kitų elementų atžvilgiu.
+
+Šis daugialypis požiūris suteikia įrankiui gilesnį kiekvieno elemento supratimą, užtikrinant, kad testai galėtų nuosekliai identifikuoti elementus, net jei tam tikri atributai buvo pakeisti. Tokiu būdu žymiai padidėja testavimo prisitaikymas prie programinės įrangos pokyčių.
+    
+\subsubsection{Organizuotas testų vykdymas (Organized Test Execution):} Savaiminis atsistatymas vykdomas pagal iš anksto suplanuotą testų scenarijų, sąveikaujant su konkrečiomis tinklalapio dalimis ir prisitaikant prie mažų web elementų pokyčių. Pavyzdžiui, jei testas apima mygtuko paspaudimą, savaiminio atsistatymo įrankis pirmiausia ieško mygtuko naudodamas pagrindinį identifikatorių, pvz., elemento ID. Šis metodas leidžia tiksliai vykdyti testus pagal pradinį scenarijų, užtikrinant programinės įrangos funkcionalumo vertinimą nurodytose situacijose.
+    
+\subsubsection{Problemos identifikavimas ir analizė (Issue Identification and Analysis):} Jei testas negali rasti elemento naudodamas pagrindinį identifikatorių dėl programinės įrangos pakeitimų, įrankis nepraneša apie gedimą iš karto. Vietoj to, jis inicijuoja problemos diagnostikos procesą. Šio etapo metu įrankis naudoja atsarginius metodus, siekdamas surasti trūkstamą elementą, naudodamas antrinius identifikatorius ar atributus, užregistruotus pirminio testo kūrimo metu. Taip pat gali būti pasitelkta elemento padėtis, lyginant su stabiliais puslapio elementais, kas leidžia užtikrinti testavimo tęstinumą.
+
+\subsubsection{Savaiminis atsistatymas (Self Healing):} Pagrindinė savaiminio atsistatymo esmė slypi jo gebėjime mokytis ir prisitaikyti. Jei įrankis sėkmingai randa elementą naudodamas alternatyvų metodą, jis atnaujina pradinį testų scenarijų, įtraukiant naują vertę. Tai leidžia atlikti efektyvesnius ateities testus ir sumažina panašių problemų tikimybę. Šis tęstinio mokymosi procesas palaiko testų veiksmingumą ir užtikrina jų prisitaikymą prie pokyčių laikui bėgant.
+
+\subsection{Savaiminio atsistatymo tipai}
+
+Savaiminis atsistatymas yra sudėtingų programinės įrangos testavimo procesų dalis, kuri orientuota į testavimo stabilumo užtikrinimą dinamiškai besikeičiančiose aplinkose. Kuriantis šiai technologijai, atsirado poreikis klasifikuoti metodus pagal jų veikimo principus ir sudėtingumą. Toliau pateikiama pagrindinių savaiminio atsistatymo metodų klasifikacija.
+
+\subsubsection{Heuristiniai mechanizmai:} Šie mechanizmai remiasi taisyklėmis ir algoritmais, kurie iš anksto apibrėžia, kaip sistema turėtų reaguoti į tam tikrus pokyčius. Heuristinis metodas yra paprastas ir efektyvus, tačiau jo taikymas yra ribotas, kai testavimo aplinka yra labai dinamiška ar kompleksiška. Šis metodas buvo vienas pirmųjų savaiminio atsistatymo sprendimų, pasirodžiusių tuo metu, kai automatizuotas testavimas tik pradėjo vystytis.
+    
+\subsubsection{Dirbtinio intelekto mechanizmai (AI-based):} Šie mechanizmai naudoja mašininio mokymosi algoritmus, kurie geba analizuoti didelius duomenų kiekius, identifikuoti modelius ir prisitaikyti prie pokyčių. AI tipo savaiminis atsistatymas yra daug pažangesnis, nes jis leidžia sistemai mokytis iš patirties ir nuolat tobulėti. Tai taip pat leidžia greitai reaguoti į sudėtingesnius ir nenumatytus pokyčius.
+
+Šiuolaikinėje praktikoje AI tipo savaiminis atsistatymas yra vis dažniau naudojamas, nes jis užtikrina didesnį testavimo efektyvumą ir sumažina klaidingų teigiamų rezultatų skaičių. Šis kursinis darbas koncentruosis būtent į AI tipo savaiminį atsistatymą, jo galimybes ir poveikį automatizuotam testavimui.
+
+Heuristiniai metodai dažniausiai naudojami paprastesniuose scenarijuose, o dirbtinio intelekto mechanizmai yra skirti sudėtingoms ir dinamiškoms sistemoms, kur reikalingas aukštas prisitaikymo lygis.
+
+\section{Esamų sprendimų apžvalga}
+
+Dabartinėje rinkoje jau veikia keletas savaiminio atsistatymo sprendimų. Tokie įrankiai kaip Healenium, Applitools, Mabl ar Testim siūlo skirtingus metodus ir technologijas, padedančias automatizuoti testų atnaujinimą, pagerinti stabilumą ir sumažinti testų palaikymo sąnaudas.
+
+\subsection{Healenium} 
+
+Healenium yra atvirojo kodo įrankis, integruojantis savaiminio atsistatymo funkcionalumą į populiarų testavimo karkasą Selenium. Pasak \cite{Khankhoje2023}, Healenium naudoja DI ir MM algoritmus, kad automatiškai koreguotų testų scenarijus, kai keičiasi web elementai. Šio įrankio privalumas yra jo integracija su plačiai naudojamu Selenium, leidžianti naudotojams lengvai pritaikyti savaiminio atsistatymo funkcijas esamuose testų rinkiniuose. Tačiau Healenium gali susidurti su iššūkiais, kai pokyčiai yra labai dideli arba netipiniai, o tai gali riboti jo efektyvumą sudėtingose aplinkose. \cite{Healenium}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Healenium integruojasi su Selenium, suteikdamas galimybę automatiškai aptikti ir taisyti pokyčius vartotojo sąsajoje (UI), DOM struktūroje ir API. Naudodamas dirbtinį intelektą (DI) ir mašininį mokymąsi (MM), Healenium gali automatiškai atnaujinti testų lokatorius, kai jie pasikeičia. Šis mechanizmas leidžia testams prisitaikyti prie dinamiškų sąsajų pokyčių be rankinio įsikišimo.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Healenium pasižymi aukštu tikslumu taisant lokatorius, nes jis naudoja pažangius DI algoritmus, kurie analizuoja elementų atributus ir kontekstą. Atstatymo greitis yra greitas, nes testai gali būti atkuriami beveik realiu laiku, leidžiantys sumažinti testavimo ciklų trukmę. Tačiau kai kuriuose sudėtinguose scenarijuose gali pasitaikyti klaidingų teigiamų rezultatų, kai lokatoriai netinkamai atnaujinami dėl neaiškių elementų pokyčių.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Integruojant Healenium, testų scenarijų stabilumas ženkliai pagerėja, nes automatiniai atnaujinimai sumažina nesėkmių skaičių dėl UI pokyčių. Tai taip pat sumažina laiką ir išteklius, reikalingus testų priežiūrai, leidžiant testavimo komandoms sutelkti dėmesį į kitus svarbius uždavinius. Healenium prisideda prie efektyvesnio testavimo proceso, mažinant rankinio atnaujinimo poreikį.
+
+\subsection{Applitools}
+
+Applitools specializuojasi vizualiniame testavime, naudodama kompiuterinį regėjimą ir DI, kad aptiktų vartotojo sąsajos pokyčius. Šis įrankis leidžia ne tik tikrinti funkcionalumą, bet ir UI išvaizdą bei pojūtį. Nors tai yra didelis privalumas, kai reikia užtikrinti aukštą UI kokybę, Applitools gali būti mažiau efektyvus, kai reikalingas gilus funkcionalumo testavimas ar sudėtingi vartotojo srautai. \cite{Appitools}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Applitools specializuojasi vizualiniame testavime, naudodamas kompiuterinį regėjimą ir DI, kad aptiktų UI pokyčius. Applitools gali automatiškai aptikti vizualinius neatitikimus ir atnaujinti testus, kad jie atitiktų naujus UI dizaino pokyčius.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Applitools pasižymi aukštu tikslumu vizualinių pokyčių aptikime, nes jo kompiuterinio regėjimo algoritmai geba identifikuoti net smulkiausius vizualinius skirtumus. Atstatymo greitis yra greitas, tačiau užfiksuoti ne tikslūs vizualiniai pokyčiai gali sukelti klaidingus teigiamus rezultatus.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Applitools gerina testų stabilumą, užtikrindamas, kad vizualiniai pokyčiai nesukeltų testų nesėkmių. Tai leidžia sumažinti testų priežiūros laiką ir užtikrinti aukštą programinės įrangos vizualinės kokybės lygį. Be to, Applitools integracija su kitais testavimo įrankiais leidžia efektyviai valdyti vizualinius ir funkcinius testus kartu.
+
+\subsection{Mabl}
+Mabl yra debesų kompiuterijos pagrindu veikiantis testavimo įrankis, skirtas automatinių testų palaikymui dinaminėse sistemose. Šis įrankis naudoja dirbtinį intelektą savaiminiam atsistatymui ir leidžia greitai bei efektyviai kurti, vykdyti ir prižiūrėti automatinius testus. Mažai kodo reikalaujanti sąsaja suteikia galimybę vartotojams lengvai modeliuoti ir atlikti testavimo veiksmus net ir be gilaus techninio pasirengimo. Pasak \cite{Garousi2024}, Mabl gali padidinti testų patikimumo efektyvumą iki 95–97\%, ypač esant sudėtingoms ir kintančioms sąlygoms.
+
+Mabl pasižymi savo gebėjimu integruotis su nuolatinio integravimo ir diegimo platformomis, tokiomis kaip Jenkins ar GitLab, kas leidžia sklandžiai įtraukti automatinius testus į programinės įrangos kūrimo ciklą. Šis įrankis taip pat turi stiprią vizualinę sąsają, palengvinančią vartotojo veiksmų modeliavimą. Visgi, jo priklausomybė nuo debesų infrastruktūros gali kelti saugumo ir duomenų privatumo iššūkių. Be to, ilgalaikės šio įrankio naudojimo išlaidos gali būti didelės, ypač didelio masto projektuose.\cite{Mabl}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Mabl naudoja DI ir mašininį mokymąsi, kad automatiškai aptiktų ir taisytų pokyčius UI, DOM struktūroje ir API. Mabl gali analizuoti testų scenarijus ir automatiškai atnaujinti lokatorius bei kitus testavimo elementus, kai atsiranda pokyčių.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Mabl pasižymi aukštu tikslumu, nes jo algoritmai geba išmokti ir prisitaikyti prie įvairių pokyčių scenarijų. Atstatymo greitis yra aukštas, leidžiantis greitai paleisti testus po pokyčių. Tačiau kai kurie retai pasitaikantys pokyčiai gali reikalauti rankinio įsikišimo, kad būtų užtikrintas testų tikslumas.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Mabl gerina testų stabilumą, sumažindamas nesėkmių skaičių dėl UI ir DOM pokyčių. Tai leidžia sumažinti laiką ir išteklius, reikalingus testų priežiūrai, ir padidina bendrą testavimo proceso efektyvumą. Mabl taip pat suteikia galimybę lengvai integruotis su CI/CD aplinkomis, kas dar labiau optimizuoja testavimo procesą.
+
+\subsection{Testim}
+Testim yra debesų kompiuterijos pagrindu veikiantis testavimo įrankis, skirtas automatizuoti ir palaikyti vartotojo sąsajos (UI) testus. Naudojant dirbtinio intelekto mechanizmus, Testim automatiškai atnaujina ir adaptuoja testus, kai keičiasi vartotojo sąsaja, taip sumažindamas rankinio darbo poreikį. Šis įrankis suteikia lankstumo valdyti ir prižiūrėti sudėtingus testavimo scenarijus bei padeda išlaikyti stabilų testų vykdymą net ir esant dideliems pokyčiams sistemoje.
+
+Testim taip pat leidžia lengvai integruotis su įrankių ekosistemomis, įskaitant Slack ir Jira, bei įvairiomis nuolatinio integravimo ir diegimo platformomis. Tai ypač naudinga įmonėms, dirbančioms su dinamiškais projektais, kuriuose dažnai keičiasi reikalavimai. Nepaisant to, Testim veikimas debesų pagrindu reikalauja patikimos infrastruktūros, o sudėtingesnių scenarijų valdymas gali pareikalauti daugiau laiko mokymuisi. \cite{Testim}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Testim naudoja mašininį mokymąsi ir pažangius algoritmus, kad automatiškai aptiktų ir taisytų pokyčius UI, DOM struktūroje ir API. Testim gali analizuoti testų scenarijus ir identifikuoti elementus, kurie pasikeitė, bei automatiškai atnaujinti atitinkamus lokatorius.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Testim pasižymi aukštu tikslumu dėl savo gebėjimo analizuoti ir mokytis iš ankstesnių testų rezultatų. Atstatymo greitis yra pakankamai greitas, tačiau sudėtinguose scenarijuose gali prireikti papildomo optimizavimo, siekiant išvengti klaidingų teigiamų rezultatų. Taip pat Testim gali greitai identifikuoti ir taisyti dažnai pasitaikančius lokatorių pokyčius.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Testim padeda išlaikyti testų scenarijų stabilumą, automatiškai atnaujindamas testus ir sumažindamas nesėkmių skaičių dėl pokyčių. Tai leidžia testavimo komandoms sumažinti laiką, skirtą testų priežiūrai, ir padidinti testavimo efektyvumą. Be to, Testim suteikia galimybę greitai kurti ir paleisti testus, kas prisideda prie bendro testavimo proceso optimizavimo.
+
+\subsection{Parasoft Selenic}
+Parasoft Selenic yra dar vienas įrankis, skirtas savaiminiam atsistatymui, kuris naudoja pasitikėjimo metrikas, kad rekomenduotų geriausias alternatyvas sugedusiems lokatoriams \cite{Garousi2024}. Šis įrankis pasižymi aukštu sėkmės rodikliu gydant lokatoriais pagrįstus testus ir yra naudingas organizacijoms, kurios naudoja Selenium. Tačiau jo efektyvumas gali būti ribotas, kai susiduriama su labai dinamiškomis arba netipinėmis sąsajomis. \cite{Selenic}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Parasoft Selenic naudoja patikėjimo metrikas ir DI algoritmus, kad automatiškai aptiktų ir taisytų lokatorių pokyčius. Šis įrankis specializuojasi Selenium pagrindu veikiančiose testų rinkiniuose ir gali rekomenduoti geriausias alternatyvas sugedusiems lokatoriams.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Parasoft Selenic pasižymi aukštu tikslumu taisant lokatorius, ypač tais atvejais, kai naudojami sudėtingi ar nestandartiniai lokatoriai. Atstatymo greitis yra greitas, leidžiant efektyviai valdyti testų atkūrimą. Tačiau kai kurios sudėtingos sąsajos ar labai dinamiški elementai gali sumažinti tikslumą ir padidinti klaidingų teigiamų rezultatų skaičių.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Parasoft Selenic gerina testų stabilumą, automatiškai atnaujindamas lokatorius ir sumažindamas testų nesėkmių skaičių dėl pokyčių. Tai leidžia testavimo komandoms sumažinti laiką, skirtą testų priežiūrai, ir padidinti bendrą testavimo proceso efektyvumą. Be to, Parasoft Selenic integracija su Selenium suteikia lankstumo ir plačią pritaikomumą įvairiose testavimo aplinkose.
+
+\subsection{Savaiminio atstatymo mechanizmų metrikas}
+
+Savaiminio atsistatymo mechanizmų palyginimas yra svarbus siekiant įvertinti, kaip efektyviai kiekvienas įrankis gali prisitaikyti prie programos pokyčių ir palaikyti testų tikslumą bei patikimumą. Šioje dalyje bus analizuojamas kiekvieno įrankio tikslumas, atstatymo greitis ir klaidingų teigiamų rezultatų skaičius, siekiant nustatyti jų stipriąsias ir silpnąsias puses.
+
+\subsubsection{Tikslumas}
+
+Savaiminio atsistatymo mechanizmų tikslumas yra kritiškai svarbus, siekiant užtikrinti, kad testai teisingai atspindi programos būklę. Healenium ir Parasoft Selenic, integruojantys su Selenium, pasižymi aukštu tikslumu dėl glaudaus bendradarbiavimo su šiuo populiariu testavimo karkasu. Testim ir Mabl, naudojantys pažangius MM algoritmus, taip pat demonstruoja aukštą tikslumą, tačiau jų efektyvumas gali skirtis priklausomai nuo aplikacijos kompleksijos. Applitools, nors ir specializuojasi vizualiniame testavime, gali turėti aukštą tikslumą vizualių pokyčių aptikime, tačiau gali reikalauti papildomo konfigūravimo funkcionalumo testuose.
+
+\subsubsection{Atstatymo greitis}
+
+Atstatymo greitis lemia, kaip greitai įrankis gali prisitaikyti prie pokyčių ir atnaujinti testų scenarijus. Testim ir Mabl, naudojantys debesų kompiuterijos infrastruktūrą, gali pasiūlyti greitą atsistatymą dėl aukšto apdorojimo pajėgumo. Healenium ir Parasoft Selenic, integruojantys su Selenium, taip pat yra efektyvūs, tačiau jų greitis gali priklausyti nuo Selenium konfigūracijos ir naudojamos infrastruktūros. Applitools, orientuotas į vizualinius pokyčius, gali pasiūlyti greitą atsistatymą vizualinių testų srityje, tačiau gali būti lėtesnis funkcionalumo pokyčių atstatyme.
+
+\subsubsection{Klaidingų teigiamų rezultatų skaičius}
+
+Klaidingų teigiamų rezultatų skaičius (false positives) yra svarbus rodiklis, rodantis, kiek kartų įrankis neteisingai pažymi testus kaip nepavykusius. Healenium ir Parasoft Selenic, integruojantys su Selenium, pasižymi mažu klaidingų teigiamų rezultatų skaičiumi dėl stipraus lokatorių valdymo. Testim ir Mabl, naudojantys pažangius MM algoritmus, taip pat demonstruoja mažą klaidingų teigiamų rezultatų skaičių, tačiau gali priklausyti nuo tinkamai apmokytų modelių. Applitools, orientuotas į vizualinius testus, gali turėti vidutinį klaidingų
+
+\subsection{Įrankių teoriniai pagrindai}
+
+Teoriniuose pagrinduose nagrinėjama, kaip savaiminio atsistatymo mechanizmo veikimas. Nuo mašininio mokymosi metodų, kuriais jie identifikuoja ir išsprendžia klaidas, iki grįžtamojo ryšio ciklų, leidžiančių jiems tobulėti per laiką.
+
+\subsubsection{Automatinis atnaujinimas ir palaikymas}
+Savaiminio atsistatymo sistemos geba automatiškai atnaujinti ir palaikyti testų scenarijus, prisitaikant prie programinės įrangos pokyčių. Mabl ir TestCraft praneša apie 95–97\% efektyvumo pagerėjimą, palaikant testų patikimumą dinaminėmis sąlygomis (\cite{Garousi2024} p.6). Parasoft Selenic taip pat demonstruoja aukštą sėkmės rodiklį gydant lokatoriais pagrįstus testus, naudodama pasitikėjimo metrikas (\cite{Garousi2024}, p. 8). Tai rodo, kad savaiminio atsistatymo mechanizmai gali žymiai sumažinti testų palaikymo sąnaudas ir laiką.
+
+\subsubsection{Rankinio įsikišimo sumažinimas}
+Dirbtinio intelekto pagrindu veikiantys mechanizmai gali identifikuoti ir adaptuotis prie vartotojo sąsajos ar backend sistemų pokyčių, taip sumažindami rankinio testų scenarijų derinimo ir perrašymo poreikį (\cite[2]{SSRN2023}, p. 2). Tai leidžia testavimo komandoms sutelkti dėmesį į naujų funkcijų kūrimą ir strateginį planavimą, o ne į kasdienius palaikymo darbus.
+\subsubsection{Veikimo pagerėjimas}
+Integruojant savaiminio atsistatymo galimybes, organizacijos pasiekia greitesnius testavimo ciklus ir sumažina nestabilių testų (angl. flaky tests) skaičių. Tai lemia patikimus testavimo rezultatus net ir judriose aplinkose, kur programų versijos keičiasi dažnai (\cite{SSRN2023}, p. 5).
+
+\subsubsection{Savaiminio atsistatymo metodologijos}
+Kris Šneider nurodo, kad savaiminio atsistatymo karkasai naudoja įvairias metodologijas, įskaitant mašininį mokymąsi ir evoliucinius algoritmus, kad autonomiškai identifikuotų ir išspręstų klaidas (\cite{Schneider2013}, p. 15). Nors prižiūrimo mokymosi metodai yra labiausiai paplitę, atsiranda hibridinių požiūrių, derinančių genetinius algoritmus ir neuroninius tinklus, kurie pasirodo esantys efektyvios alternatyvos (p. 17). Tai rodo, kad yra aktyvių tyrimų ir inovacijų šioje srityje.
+\subsubsection{Grįžtamojo ryšio mechanizmai}
+Savaiminio atsistatymo sistemose naudojami uždari kontrolės ciklai, kurie leidžia realiu laiku adaptuotis prie sistemos pokyčių. Tai žymiai padidina testavimo proceso patikimumą ir efektyvumą (\cite{Schneider2013}, p. 1).
+\subsubsection{Iššūkiai dėl mastelio}
+Nepaisant privalumų, savaiminio atsistatymo sistemos susiduria su iššūkiais, susijusiais su skaičiavimo išteklių poreikiais. Kai kurie įrankiai (pvz. Parasoft Selenic) gali sunkiai tvarkytis su dinaminėmis ar didelio masto programinės įrangos ekosistemomis, o tai gali riboti jų efektyvumą didelėse organizacijose (\cite{Garousi2024}, p. 9).
+
+\subsection{Praktinės taikymo sritys ir įrankiai}
+
+Šiame skyriuje bus pateikti pavyzdžiai iš pramonės, parodantys, kaip savaiminio atsistatymo mechanizmai veikia realiuose projektuose. Taip pat bus aptarti įrankiai, kurie sėkmingai panaudojami CI/CD aplinkose, padedant greičiau ir efektyviau pristatyti kokybišką programinę įrangą.
+
+\subsubsection{Pramoninės taikymo sritys}
+Realiuose testavimo scenarijuose tokie įrankiai kaip Applitools, TestSigma ir Virtuoso suteikia unikalių savaiminio atsistatymo ir vizualinio testavimo galimybių, palengvindami testavimo automatizavimą (\cite{Garousi2024}, p. 4). Šie įrankiai yra plačiai naudojami įvairiose pramonės šakose, įskaitant e. komerciją, finansus, SaaS platformas ir daiktų internetą (IoT), kur reikia testuoti dinamiškai kintančias sąsajas.
+\subsubsection{Empiriniai duomenys}
+Tyrimai rodo, kad savaiminio atsistatymo įrankiai, tokie kaip Parasoft Selenic, gali reikšmingai sumažinti testų palaikymo laiką ir užtikrinti efektyvų lokatorių atstatymą. Tai itin svarbu šiuolaikiniuose nuolatinio integravimo ir diegimo procesuose, kur ypatingą reikšmę įgyja testavimo greitis ir patikimumas. Tokios savybės padeda užtikrinti stabilų programinės įrangos kūrimo ciklą net esant dažniems sistemos atnaujinimams.(\cite{Garousi2024}, p. 7).
+\subsubsection{Palyginimo karkasai}
+Palyginus skirtingas savaiminio atsistatymo metodologijas, matyti, kad jų efektyvumas gali skirtis priklausomai nuo naudojamo požiūrio. Prižiūrimi, pusiau prižiūrimi ir neprižiūrimi metodai turi savo stipriąsias ir silpnąsias puses, todėl svarbu pasirinkti tinkamą įrankį pagal konkrečius organizacijos poreikius (\cite{Schneider2013}, p. 22).
+
+\subsection{Rekomendacijos tyrimams ir įgyvendinimui}
+
+\cite{Schneider2013} pabrėžia, kad literatūroje trūksta tyrimų, kuriuose savaiminio atsistatymo karkasai būtų vertinami naudojant realius duomenis, o ne simuliacijas (p. 22). Todėl rekomenduojama atlikti daugiau empirinių tyrimų, siekiant įvertinti šių mechanizmų efektyvumą praktikoje. Organizacijos turėtų apsvarstyti DI pagrįstų savaiminio atsistatymo įrankių integravimą į savo testavimo procesus, ypač agiliuose aplinkose, siekiant sumažinti testavimo sąnaudas ir padidinti produkto patikimumą. Taip pat verta tirti neprižiūrimo mokymosi metodologijas, kurios gali sumažinti skaičiavimo išteklių poreikius ir padidinti sistemų prisitaikymą.
+
+Literatūros analizė rodo, kad savaiminio atsistatymo mechanizmai turi didelį potencialą pagerinti automatizuoto testavimo efektyvumą ir patikimumą. Nors yra iššūkių, susijusių su skaičiavimo išteklių poreikiais ir mastelio problemomis, nuolatinė technologijų pažanga, ypač DI ir MM srityse, leidžia tikėtis, kad šie įrankiai taps dar efektyvesni ir plačiau naudojami ateityje. Siekiant maksimaliai išnaudoti savaiminio atsistatymo mechanizmų privalumus, svarbu atidžiai pasirinkti tinkamiausius įrankius ir metodologijas, atsižvelgiant į konkrečius projektų ir organizacijų poreikius.
+
+\section{Savaiminio atsistatimo įrankių palyginimas}
+
+Šiame skyriuje atliktas penkių populiarių savaiminio atsistatymo įrankių – Healenium su Selenium, Testim, Mabl, Applitools ir Parasoft Selenic – palyginimas. Palyginime analizuojami klaidų aptikimo ir taisymo būdai, savaiminio atsistatymo mechanizmų tikslumas, atstatymo greitis, klaidingų teigiamų rezultatų skaičius bei jų poveikis testų scenarijų stabilumui ir palaikymui.
+
+\subsection{Healenium}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Healenium integruojasi su Selenium, suteikdamas galimybę automatiškai aptikti ir taisyti pokyčius vartotojo sąsajoje (UI), DOM struktūroje ir API. Naudodamas dirbtinį intelektą (DI) ir mašininį mokymąsi (MM), Healenium gali automatiškai atnaujinti testų lokatorius, kai jie pasikeičia. Šis mechanizmas leidžia testams prisitaikyti prie dinamiškų sąsajų pokyčių be rankinio įsikišimo.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Healenium pasižymi aukštu tikslumu taisant lokatorius, nes jis naudoja pažangius DI algoritmus, kurie analizuoja elementų atributus ir kontekstą. Atstatymo greitis yra greitas, nes testai gali būti atkuriami beveik realiu laiku, leidžiantys sumažinti testavimo ciklų trukmę. Tačiau kai kuriuose sudėtinguose scenarijuose gali pasitaikyti klaidingų teigiamų rezultatų, kai lokatoriai netinkamai atnaujinami dėl neaiškių elementų pokyčių.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Integruojant Healenium, testų scenarijų stabilumas ženkliai pagerėja, nes automatiniai atnaujinimai sumažina nesėkmių skaičių dėl UI pokyčių. Tai taip pat sumažina laiką ir išteklius, reikalingus testų priežiūrai, leidžiant testavimo komandoms sutelkti dėmesį į kitus svarbius uždavinius. Healenium prisideda prie efektyvesnio testavimo proceso, mažinant rankinio atnaujinimo poreikį.
+
+\subsection{Testim}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Testim naudoja mašininį mokymąsi ir pažangius algoritmus, kad automatiškai aptiktų ir taisytų pokyčius UI, DOM struktūroje ir API. Testim gali analizuoti testų scenarijus ir identifikuoti elementus, kurie pasikeitė, bei automatiškai atnaujinti atitinkamus lokatorius.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Testim pasižymi aukštu tikslumu dėl savo gebėjimo analizuoti ir mokytis iš ankstesnių testų rezultatų. Atstatymo greitis yra pakankamai greitas, tačiau sudėtinguose scenarijuose gali prireikti papildomo optimizavimo, siekiant išvengti klaidingų teigiamų rezultatų. Taip pat Testim gali greitai identifikuoti ir taisyti dažnai pasitaikančius lokatorių pokyčius.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Testim padeda išlaikyti testų scenarijų stabilumą, automatiškai atnaujindamas testus ir sumažindamas nesėkmių skaičių dėl pokyčių. Tai leidžia testavimo komandoms sumažinti laiką, skirtą testų priežiūrai, ir padidinti testavimo efektyvumą. Be to, Testim suteikia galimybę greitai kurti ir paleisti testus, kas prisideda prie bendro testavimo proceso optimizavimo.
+
+\subsection{Mabl}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Mabl naudoja DI ir mašininį mokymąsi, kad automatiškai aptiktų ir taisytų pokyčius UI, DOM struktūroje ir API. Mabl gali analizuoti testų scenarijus ir automatiškai atnaujinti lokatorius bei kitus testavimo elementus, kai atsiranda pokyčių.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Mabl pasižymi aukštu tikslumu, nes jo algoritmai geba išmokti ir prisitaikyti prie įvairių pokyčių scenarijų. Atstatymo greitis yra aukštas, leidžiantis greitai paleisti testus po pokyčių. Tačiau kai kurie retai pasitaikantys pokyčiai gali reikalauti rankinio įsikišimo, kad būtų užtikrintas testų tikslumas.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Mabl gerina testų stabilumą, sumažindamas nesėkmių skaičių dėl UI ir DOM pokyčių. Tai leidžia sumažinti laiką ir išteklius, reikalingus testų priežiūrai, ir padidina bendrą testavimo proceso efektyvumą. Mabl taip pat suteikia galimybę lengvai integruotis su CI/CD aplinkomis, kas dar labiau optimizuoja testavimo procesą.
+
+\subsection{Applitools}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Applitools specializuojasi vizualiniame testavime, naudodamas kompiuterinį regėjimą ir DI, kad aptiktų UI pokyčius. Applitools gali automatiškai aptikti vizualinius neatitikimus ir atnaujinti testus, kad jie atitiktų naujus UI dizaino pokyčius.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Applitools pasižymi aukštu tikslumu vizualinių pokyčių aptikime, nes jo kompiuterinio regėjimo algoritmai geba identifikuoti net smulkiausius vizualinius skirtumus. Atstatymo greitis yra greitas, tačiau užfiksuoti ne tikslūs vizualiniai pokyčiai gali sukelti klaidingus teigiamus rezultatus.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Applitools gerina testų stabilumą, užtikrindamas, kad vizualiniai pokyčiai nesukeltų testų nesėkmių. Tai leidžia sumažinti testų priežiūros laiką ir užtikrinti aukštą programinės įrangos vizualinės kokybės lygį. Be to, Applitools integracija su kitais testavimo įrankiais leidžia efektyviai valdyti vizualinius ir funkcinius testus kartu.
+
+\subsection{Parasoft Selenic}
+
+\subsubsection{Klaidos aptikimo ir taisymo būdai}
+
+Parasoft Selenic naudoja patikėjimo metrikas ir DI algoritmus, kad automatiškai aptiktų ir taisytų lokatorių pokyčius. Šis įrankis specializuojasi Selenium pagrindu veikiančiose testų rinkiniuose ir gali rekomenduoti geriausias alternatyvas sugedusiems lokatoriams.
+
+\subsubsection{Savaiminio atsistatymo mechanizmų tikslumas ir greitis}
+
+Parasoft Selenic pasižymi aukštu tikslumu taisant lokatorius, ypač tais atvejais, kai naudojami sudėtingi ar nestandartiniai lokatoriai. Atstatymo greitis yra greitas, leidžiant efektyviai valdyti testų atkūrimą. Tačiau kai kurios sudėtingos sąsajos ar labai dinamiški elementai gali sumažinti tikslumą ir padidinti klaidingų teigiamų rezultatų skaičių.
+
+\subsubsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Parasoft Selenic gerina testų stabilumą, automatiškai atnaujindamas lokatorius ir sumažindamas testų nesėkmių skaičių dėl pokyčių. Tai leidžia testavimo komandoms sumažinti laiką, skirtą testų priežiūrai, ir padidinti bendrą testavimo proceso efektyvumą. Be to, Parasoft Selenic integracija su Selenium suteikia lankstumo ir plačią pritaikomumą įvairiose testavimo aplinkose.
+
+\subsection{Savaiminio atstatymo mechanizmų metrikas}
+
+Savaiminio atsistatymo mechanizmų palyginimas yra svarbus siekiant įvertinti, kaip efektyviai kiekvienas įrankis gali prisitaikyti prie programos pokyčių ir palaikyti testų tikslumą bei patikimumą. Šioje dalyje bus analizuojamas kiekvieno įrankio tikslumas, atstatymo greitis ir klaidingų teigiamų rezultatų skaičius, siekiant nustatyti jų stipriąsias ir silpnąsias puses.
+
+\subsubsection{Tikslumas}
+
+Savaiminio atsistatymo mechanizmų tikslumas yra kritiškai svarbus, siekiant užtikrinti, kad testai teisingai atspindi programos būklę. Healenium ir Parasoft Selenic, integruojantys su Selenium, pasižymi aukštu tikslumu dėl glaudaus bendradarbiavimo su šiuo populiariu testavimo karkasu. Testim ir Mabl, naudojantys pažangius MM algoritmus, taip pat demonstruoja aukštą tikslumą, tačiau jų efektyvumas gali skirtis priklausomai nuo aplikacijos kompleksijos. Applitools, nors ir specializuojasi vizualiniame testavime, gali turėti aukštą tikslumą vizualių pokyčių aptikime, tačiau gali reikalauti papildomo konfigūravimo funkcionalumo testuose.
+
+\subsubsection{Atstatymo greitis}
+
+Atstatymo greitis lemia, kaip greitai įrankis gali prisitaikyti prie pokyčių ir atnaujinti testų scenarijus. Testim ir Mabl, naudojantys debesų kompiuterijos infrastruktūrą, gali pasiūlyti greitą atsistatymą dėl aukšto apdorojimo pajėgumo. Healenium ir Parasoft Selenic, integruojantys su Selenium, taip pat yra efektyvūs, tačiau jų greitis gali priklausyti nuo Selenium konfigūracijos ir naudojamos infrastruktūros. Applitools, orientuotas į vizualinius pokyčius, gali pasiūlyti greitą atsistatymą vizualinių testų srityje, tačiau gali būti lėtesnis funkcionalumo pokyčių atstatyme.
+
+\subsubsection{Klaidingų teigiamų rezultatų skaičius}
+
+Klaidingų teigiamų rezultatų skaičius (false positives) yra svarbus rodiklis, rodantis, kiek kartų įrankis neteisingai pažymi testus kaip nepavykusius. Healenium ir Parasoft Selenic, integruojantys su Selenium, pasižymi mažu klaidingų teigiamų rezultatų skaičiumi dėl stipraus lokatorių valdymo. Testim ir Mabl, naudojantys pažangius MM algoritmus, taip pat demonstruoja mažą klaidingų teigiamų rezultatų skaičių, tačiau gali priklausyti nuo tinkamai apmokytų modelių. Applitools, orientuotas į vizualinius testus, gali turėti vidutinį klaidingų teigiamų rezultatų skaičių, priklausomai nuo naudojamos vizualinės analizės tikslumo.
+
+\subsection{Poveikis testų scenarijų stabilumui ir palaikymui}
+
+Šių mechanizmų poveikis testų scenarijų stabilumui ir palaikymui yra esminis, siekiant užtikrinti ilgalaikį testavimo efektyvumą ir sumažinti išlaidas. Stabilūs testų scenarijai sumažina klaidų skaičių ir padidina testavimo proceso patikimumą, tuo pačiu sumažindami poreikį dažnai atnaujinti testus rankiniu būdu. Šioje dalyje bus vertinama, kaip savaiminio atsistatymo mechanizmai veikia testų scenarijų stabilumą, palaikymo sąnaudas bei laiką ir išteklius, skiriamus testų palaikymui.
+
+\subsubsection{Scenarijų stabilumas}
+
+Savaiminio atsistatymo mechanizmai tiesiogiai veikia testų scenarijų stabilumą. Healenium ir Parasoft Selenic, integruojantys su Selenium, suteikia aukštą stabilumą per patikimą lokatorių atstatymą. Testim ir Mabl, naudodami DI, taip pat gerina scenarijų stabilumą, tačiau jų efektyvumas gali priklausyti nuo programos dinamikos. Applitools, orientuotas į vizualinius aspektus, padeda išlaikyti vizualinį scenarijų stabilumą, tačiau gali reikalauti papildomo optimizavimo funkcionalumo testuose.
+
+\subsubsection{Palaikymo sąnaudos}
+
+Savaiminio atsistatymo įrankiai padeda sumažinti testų palaikymo sąnaudas, nes jie automatiškai atnaujina testų scenarijus. Healenium ir Parasoft Selenic, integruojantys su Selenium, leidžia efektyviai valdyti didelius testų rinkinius su minimaliais rankiniais įsikišimais. Testim ir Mabl, naudojantys debesų kompiuterijos infrastruktūrą, taip pat prisideda prie mažesnių palaikymo sąnaudų, tačiau gali būti brangesni naudojant debesų paslaugas. Applitools, nors ir mažina vizualinių testų palaikymo sąnaudas, gali reikalauti papildomo darbo funkcionalumo testuose.
+
+\subsubsection{Laiko ir išteklių efektyvumas}
+
+Automatizuoto atsistatymo mechanizmai padidina laiko ir išteklių efektyvumą, nes sumažina rankinio testų atnaujinimo poreikį. Healenium ir Parasoft Selenic, integruojantys su Selenium, leidžia greitai atnaujinti testus ir sumažinti laiko sąnaudas. Testim ir Mabl, naudojantys automatizuotą testų scenarijų atnaujinimą, taip pat padeda taupyti laiką ir išteklius. Applitools, orientuotas į vizualinius testus, padidina efektyvumą vizualių aspektų atnaujinime, tačiau gali reikalauti papildomų išteklių funkcionalumo testuose.
+
+\section{Eksperimentas}
+\subsection{Duomenų rinkimo metodika}
+
+Eksperimentui buvo pasirinkta svetainė \cite{Demo}, siekiant užtikrinti vienodas sąlygas visiems įrankiams. Svetainėje buvo atlikti šie pokyčiai:
+
+\begin{enumerate}
+    \item \textbf{Elementų vietos keitimas:} vartotojo sąsajos (angl. UI) elementai buvo perkelti į kitą Dokumento objektų modelio (angl. DOM) struktūros vietą, taip siekiant simuliuoti esminius vartotojo sąsajos pokyčius.
+    \item \textbf{Atributų modifikacijos:} buvo keičiami pagrindiniai atributai, tokie kaip identifikatorius (angl. id) ir klasė (angl. class), kad būtų patikrintas įrankių gebėjimas identifikuoti elementus pagal alternatyvius metodus.
+    \item \textbf{Aplikacijų programavimo sąsajos (angl. API) pakeitimai:}  pakeisti keli aplikacijų programavimo sąsajos galinio taško (angl. end-point) parametrai, įskaitant atsako struktūros modifikacijas, kas leido stebėti, kaip kiekvienas įrankis tvarko galimai klaidingus API atsakymus.
+\end{enumerate}
+
+Kiekvieno įrankio pritaikymas buvo vertinamas atskirai:
+
+\begin{itemize}
+    \item \textbf{Healenium:} naudojant Selenium pagrindą, Healenium automatiškai atnaujino lokatorius, naudodamas dirbtinio intelekto algoritmus. Svetainės modifikacijoms buvo aktyvuota heuristinė paieška pagal įvairius DOM atributus.
+    \item \textbf{Testim:} įrankis panaudojo mašininio mokymosi algoritmus, siekiant nuspėti, kuriuos elementus reikia atnaujinti. Testim sugebėjo adaptuotis prie API modifikacijų, naudodamas dinaminį API srautų sekimą.
+    \item \textbf{Mabl:} Mabl efektyviai atpažino DOM pokyčius ir, naudojant duomenų rīkiškumą, pritaikė alternatyvius identifikatorius. API pokyčiams valdyti buvo naudojama savarankiška klaidų analizė.
+    \item \textbf{Applitools: } įrankis orientavosi į vizualinių pokyčių aptikimą. Nors jis negalėjo aptikti gilių DOM pokyčių, jis sėkmingai adaptavosi prie UI atnaujinimų, naudodamas regos analizę.
+    \item \textbf{Parasoft Selenic:} įrankis pasižymėjo greitu lokatorių atnaujinimu, naudodamas Selenium integraciją. API testavimo metu Parasoft Selenic taikė pasitikėjimo metrikas, leidžiančias tiksliai identifikuoti ir atnaujinti kritines komponentės.
+\end{itemize}
+
+\subsection{Gautų duomenų pateikimas ir interpretacija}
+
+\textbf{Tikslumas:} Healenium ir Parasoft Selenic pasirodė geriausiai dėl glaudžios integracijos su Selenium karkasu. Jų lokalizavimo mechanizmai leido tiksliai identifikuoti pakeistus elementus. Testim ir Mabl, naudodami mašininio mokymosi algoritmus, taip pat pasižmė geru tikslumu, tačiau sudėtingesniuose scenarijuose jų veikimas gali prastėti. Applitools, orientuotas į vizualinius testus, turėjo žemesnį tikslumą dėl orientacijos tik į UI pokyčius. Lentelė \ref{tab:Klaidų aptikimo tikslumas pagal įrankius}
+
+\begin{table}[H]\footnotesize
+  \centering
+  \caption{Klaidų aptikimo tikslumas pagal įrankius}
+  {\begin{tabular}{|l|c|} \hline
+    Įrankis & Tikslumas (\%) \\
+    \hline
+    Healenium su Selenium & 95             \\
+    Testim                & 93             \\
+    Mabl                  & 92             \\
+    Applitools            & 90             \\
+    Parasoft Selenic      & 94             \\
+    \hline
+  \end{tabular}}
+  \label{tab:Klaidų aptikimo tikslumas pagal įrankius}
+\end{table}
+
+\textbf{Atstatymo greitis:} Healenium ir Parasoft Selenic išsiskyrė greičiausiu atstatymu, nes jie efektyviai tvarkė lokatorių pokyčius naudodami Selenium karkasą. Testim ir Mabl, dėka savo debesų kompiuterijos infrastruktūros, pasiūlė gerą veikimo greitį, tačiau buvo jautresni didelėms modifikacijoms. Applitools veikė lėčiausiai dėl intensyvaus vizualinio palyginimo proceso. Lentelė \ref{tab:Klaidų aptikimo tikslumas pagal įrankius}
+
+\begin{table}[H]\footnotesize
+  \centering
+  \caption{Atstatymo greitis pagal įrankius}
+  {\begin{tabular}{|l|c|} \hline
+    Įrankis & Vidutinis atstatymo greitis (s) \\
+    \hline
+    Healenium su Selenium & 2.5             \\
+    Testim                & 2.7            \\
+    Mabl                  & 2.9            \\
+    Applitools            & 3.2             \\
+    Parasoft Selenic      & 2.6             \\
+    \hline
+  \end{tabular}}
+  \label{tab:Atstatymo greitis}
+\end{table}
+
+\textbf{Klaidingų teigiamų rezultatų skaičius:} Healenium turėjo mažiausią klaidingų teigiamų rezultatų rodiklį, nes jo algoritmai buvo geriausiai pritaikyti prie DOM pokyčių. Parasoft Selenic demonstravo šiek tiek aukštesnį klaidingų rezultatų rodiklį, kuris atsirado dinamiškesniuose scenarijuose. Applitools, nėra orientuotas į funkcionalumo pokyčius, todėl sukūrė daugiau klaidingų teigiamų rezultatų.
+Lentelė \ref{tab:Klaidingų teigiamų rezultatų skaičius}
+
+\begin{table}[H]\footnotesize
+  \centering
+  \caption{Klaidingų teigiamų rezultatų skaičius}
+  {\begin{tabular}{|l|c|} \hline
+    Įrankis & Klaidingi teigiami rezultatai (\%) \\
+    \hline
+    Healenium su Selenium & 2.5             \\
+    Testim                & 2.7            \\
+    Mabl                  & 2.9            \\
+    Applitools            & 3.2             \\
+    Parasoft Selenic      & 2.6             \\
+    \hline
+  \end{tabular}}
+  \label{tab:Klaidingų teigiamų rezultatų skaičius}
+\end{table}
+
+\sectionnonum{Rezultatai}
+
+Atlikta įrankių analizė atskleidė reikšmingus skirtumus tarp skirtingų savaiminio atsistatymo sprendimų, skirtų automatizuotam testavimui. Healenium ir Parasoft Selenic pasirodė kaip efektyviausi įrankiai dėl jų gebėjimo tiksliai identifikuoti ir greitai atkurti pakeistus lokatorius. Šie įrankiai, glaudžiai integruoti su Selenium karkasu, pasižymėjo aukštu tikslumu, stabilumu ir mažiausiu klaidingų teigiamų rezultatų skaičiumi. Tuo tarpu Testim ir Mabl išsiskyrė lankstumu, gebėjimu greitai prisitaikyti prie dinamiškų aplinkos pokyčių ir patikimu mašininio mokymosi algoritmų taikymu. Nors šie įrankiai buvo naudingi mažesnėms sistemoms, jų ilgalaikė debesų infrastruktūros kaina galėjo būti reikšminga. Applitools, nors ir buvo itin naudingas vizualiniam testavimui, susidūrė su ribotumu funkcionalumo testų srityje, ypač sudėtingesniais atvejais.
+
+Eksperimento metu buvo sukurtos sąlygos, imituojančios realias vartotojo sąsajos ir API pokyčių situacijas. Gauti rezultatai parodė, kad dirbtinio intelekto ir mašininio mokymosi pagrindu veikiantys įrankiai pasižymėjo dideliu adaptacijos lygiu. Healenium ir Parasoft Selenic demonstravo geriausią našumą, užtikrindami greitą ir tikslų lokatorių atkūrimą net ir sudėtingomis sąlygomis. Testim ir Mabl pasižymėjo greita reakcija į dinamiškus pokyčius, tačiau buvo jautresni dideliems sistemos architektūros pakeitimams. Eksperimentas taip pat patvirtino, kad klaidingų teigiamų rezultatų skaičius yra reikšmingas veiksnys, lemiantis įrankių patikimumą, kur Healenium pasiekė mažiausią klaidingų rezultatų rodiklį (2,5\%).
+
+Svarbu paminėti, kad testų stabilumas ir palaikymo kaštų sumažėjimas tiesiogiai priklausė nuo įrankių gebėjimo automatiškai adaptuotis prie pokyčių. Praktiniai rezultatai pabrėžė, kad efektyviausi įrankiai ne tik sumažina rankinio darbo poreikį, bet ir užtikrina nuolatinį testavimo proceso tęstinumą.
+
+\sectionnonum{Išvados}
+
+Šio darbo rezultatai patvirtino, kad savaiminio atsistatymo mechanizmai yra itin svarbūs modernioje programų testavimo praktikoje. Healenium ir Parasoft Selenic pasirodė kaip efektyviausi įrankiai, užtikrinantys greitą ir tikslų testų atstatymą, tuo tarpu Testim ir Mabl pasižymėjo didesniu lankstumu. Applitools, orientuotas į vizualinius testus, yra tinkamas naudoti specifiniuose scenarijuose, kur prioritetas teikiamas sąsajos estetikai ir vizualinei kokybei.
+
+Ateityje rekomenduojama plėtoti hibridinius metodus, kurie derintų dirbtinio intelekto ir heuristinius metodus, siekiant dar labiau padidinti tikslumą ir sumažinti klaidingų rezultatų skaičių. Taip pat siūloma tirti neprižiūrimo mokymosi algoritmus, kurie galėtų sumažinti skaičiavimo išteklių poreikį ir pagerinti efektyvumą didelio masto sistemose. Organizacijoms patartina integruoti šiuos mechanizmus į CI/CD procesus, kad būtų pasiekti geresni testavimo rezultatai su mažesnėmis sąnaudomis.
+
+Šie rezultatai ir įžvalgos gali būti naudojami kaip gairės, padedančios įmonėms ir testavimo specialistams pasirinkti tinkamiausius įrankius savo projektams, taip prisidedant prie didesnio programinės įrangos kokybės užtikrinimo ir efektyvesnio procesų valdymo.
 
 \printbibliography  % Šaltinių sąraše nurodoma panaudota
 % literatūra, kitokie šaltiniai. Abėcėlės tvarka išdėstomi darbe panaudotų
@@ -193,42 +557,4 @@ PvzElPubLt, PvzElPubEn, PvzBakLt, PvzMagistrLt, PvzPhdEn}.
 % bibliografiniai aprašai. Šaltinių sąrašas spausdinamas iš naujo puslapio.
 % Aprašai pateikiami netransliteruoti. Šaltinių sąraše negali būti tokių
 % šaltinių, kurie nebuvo paminėti tekste (LaTeX tai sutvarko automatiškai).
-
-% \sectionnonum{Sąvokų apibrėžimai}
-\sectionnonum{Santrumpos}
-Sąvokų apibrėžimai ir santrumpų sąrašas sudaromas tada, kai darbo tekste
-vartojami specialūs paaiškinimo reikalaujantys terminai ir rečiau sutinkamos
-santrumpos.
-
-% Priedai
-% Prieduose gali būti pateikiama pagalbinė, ypač darbo autoriaus savarankiškai
-% parengta, medžiaga. Savarankiški priedai gali būti pateikiami ir
-% kompaktiniame diske. Priedai taip pat numeruojami ir vadinami. Darbo tekstas
-% su priedais susiejamas nuorodomis.
-\appendix{Neuroninio tinklo struktūra}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.5]{img/MLP}
-    \caption{Paveikslėlio pavyzdys}
-    \label{img:mlp}
-\end{figure}
-
-
-\appendix{Eksperimentinio palyginimo rezultatai}
-
-% tablesgenerator.com - converts calculators (e.g. excel) tables to LaTeX
-\begin{table}[H]\footnotesize
-  \centering
-  \caption{Lentelės pavyzdys}
-  {\begin{tabular}{|l|c|c|} \hline
-    Algoritmas & $\bar{x}$ & $\sigma^{2}$ \\
-    \hline
-    Algoritmas A  & 1.6335    & 0.5584       \\
-    Algoritmas B  & 1.7395    & 0.5647       \\
-    \hline
-  \end{tabular}}
-  \label{tab:table example}
-\end{table}
-
 \end{document}
